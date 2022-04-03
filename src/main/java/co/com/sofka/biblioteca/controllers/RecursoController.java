@@ -46,4 +46,36 @@ public class RecursoController {
         return this.service.findById(id);
     }
     //----------------------------------------------//
+
+    @GetMapping("/recurso/{id}/disponibilidad")
+    private String disponibilidadById(@PathVariable("id") String id) {
+        return this.service.disponibilidadById(id);
+    }
+
+    @PutMapping("/recurso/{id}/prestamo")
+    private String perstarRecursoById(@PathVariable("id") String id) {
+        return this.service.perstarRecursoById(id);
+    }
+
+    @GetMapping("/recurso/{tipoRecurso}/recomendacion/tipo")
+    private List<Recurso> recomendarRecursosByTipo(@PathVariable("tipoRecurso") String tipo) {
+        return this.service.recomendarRecursosByTipo(tipo);
+    }
+
+    @GetMapping("/recurso/{categoriaRecurso}/recomendacion/categoria")
+    private List<Recurso> recomendarRecursosByCategoria(@PathVariable("categoriaRecurso") String categoria) {
+        return this.service.recomendarRecursosByCategoria(categoria);
+    }
+
+    @GetMapping("/recurso/{categoriaRecurso}/{tipoRecurso}/recomendacion/categoriaAndTipo")
+    private List<Recurso> recomendarRecursosByCategoriaAndTipo
+            (@PathVariable("categoriaRecurso") String categoria, @PathVariable("tipoRecurso") String tipo) {
+        return this.service.recomendarRecursosByCategoriaAndTipo(categoria, tipo);
+    }
+
+    @PutMapping("/recurso/{id}/devolucion")
+    private String devolverRecursoById(@PathVariable("id") String id) {
+        return this.service.devolverRecursoById(id);
+    }
+
 }

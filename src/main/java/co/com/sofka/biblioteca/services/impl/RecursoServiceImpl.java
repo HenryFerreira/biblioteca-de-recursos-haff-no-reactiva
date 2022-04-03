@@ -6,8 +6,10 @@ import co.com.sofka.biblioteca.services.RecursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RecursoServiceImpl implements RecursoService {
@@ -44,52 +46,61 @@ public class RecursoServiceImpl implements RecursoService {
     //----------------------------------------------//
 
     @Override
-    public String disponibilidadById(String id){
+    public String disponibilidadById(String id) {
         var recurso = this.repository.findById(id);
 
-        if(recurso.get().getEstado()){
+        if (recurso.get().getEstado()) {
             return "Recurso Disponible";
         }
-
         return "Recurso Prestado " + recurso.get().getFechaPrestamo();
     }
 
-    /*public String perstarRecursoById(String id){
+    public String perstarRecursoById(String id) {
         var recurso = this.repository.findById(id);
-        var mensaje = recurso.flatMap(p -> {
-            if(!p.getEstado()){
-                return Mono.just("Recurso Prestado " + p.getFechaPrestamo());
-            }
-            p.setEstado(false);
-            p.setFechaPrestamo(LocalDate.now());
-            return repository.save(p).then(Mono.just("Recurso Disponible." +
-                    "\nEl prestamo se realizo con exito. Fecha de Prestamo: " + p.getFechaPrestamo()));
-        });
-        return mensaje;
+
+        if (!recurso.get().getEstado()) {
+            return "Recurso Prestado " + recurso.get().getFechaPrestamo();
+        }
+        recurso.get().setEstado(false);
+        recurso.get().setFechaPrestamo(LocalDate.now());
+        repository.save(recurso.get());
+        return "Recurso Disponible." +
+                "\nEl prestamo se realizo con exito. Fecha de Prestamo: " + recurso.get().getFechaPrestamo();
     }
 
-    public List<Recurso> recomendarRecursosByTipo(String tipo){
-        return this.repository.findAll().filter(p -> p.getTipoRecurso().equals(tipo));
-    }
-    public List<Recurso> recomendarRecursosByCategoria(String categoria){
-        return this.repository.findAll().filter(p -> p.getCategoriaRecurso().equals(categoria));
-    }
-    public List<Recurso> recomendarRecursosByCategoriaAndTipo(String categoria, String tipo){
-        return this.repository.findAll().filter(p ->
-                p.getCategoriaRecurso().equals(categoria) && p.getTipoRecurso().equals(tipo));
+    public List<Recurso> recomendarRecursosByTipo(String tipo) {
+        var recursos = this.repository.findAll();
+        var filtrasdos = recursos.stream().filter(p ->
+                p.getTipoRecurso().equals(tipo)).collect(Collectors.toList());
+        return filtrasdos;
+
     }
 
-    public String devolverRecursoById(String id){
+    public List<Recurso> recomendarRecursosByCategoria(String categoria) {
+        var recursos = this.repository.findAll();
+        var filtrasdos = recursos.stream().filter(p ->
+                p.getCategoriaRecurso().equals(categoria)).collect(Collectors.toList());
+        return filtrasdos;
+    }
+
+    public List<Recurso> recomendarRecursosByCategoriaAndTipo(String categoria, String tipo) {
+
+        var recursos = this.repository.findAll();
+        var filtrasdos = recursos.stream().filter(p ->
+                        p.getCategoriaRecurso().equals(categoria) && p.getTipoRecurso().equals(tipo))
+                .collect(Collectors.toList());
+        return filtrasdos;
+    }
+
+    public String devolverRecursoById(String id) {
         var recurso = this.repository.findById(id);
-        var mensaje = recurso.flatMap(p -> {
-            if(p.getEstado()){
-                return Mono.just("El recurso NO esta PRESTADO!!");
-            }
-            p.setEstado(true);
-            p.setFechaPrestamo(LocalDate.now());
-            return repository.save(p).then(Mono.just("Recurso DEVUELTO." +
-                    "\n La devolucion se realizo con exito. Fecha de Prestamo: " + p.getFechaPrestamo()));
-        });
-        return mensaje;
-    }*/
+        if (recurso.get().getEstado()) {
+            return "El recurso NO esta PRESTADO!!";
+        }
+        recurso.get().setEstado(true);
+        recurso.get().setFechaPrestamo(LocalDate.now());
+        repository.save(recurso.get());
+        return "Recurso DEVUELTO." +
+                "\n La devolucion se realizo con exito. Fecha de Prestamo: " + recurso.get().getFechaPrestamo();
+    }
 }

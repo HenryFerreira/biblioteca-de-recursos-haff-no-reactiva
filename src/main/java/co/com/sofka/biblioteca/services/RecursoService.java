@@ -26,17 +26,17 @@ public interface RecursoService {
     /*Prestar un recurso, se debe comprobar si esta prestado o no, indicarlo mediante un mensaje.
     Si se encuentra disponible debemos marcarlo como prestado y registrar la fecha del préstamo
     (no es necesario llevar el historia de prestamos).*/
-    //String perstarRecursoById(String id);
+    String perstarRecursoById(String id);
 
     /*Recomendar un listado de recursos al usuario a partir del tipo de recurso, del área temática o de los dos.
     Los recursos están clasificados por tipo de recurso (libros, revistas, fichas, etc)
     pero también por área temática (ciencias, naturaleza, historia, etc).*/
-    //List<Recurso> recomendarRecursosByTipo(String tipo);
-    //List<Recurso> recomendarRecursosByCategoria(String categoria);
-    //List<Recurso> recomendarRecursosByCategoriaAndTipo(String categoria, String tipo);
+    List<Recurso> recomendarRecursosByTipo(String tipo);
+    List<Recurso> recomendarRecursosByCategoria(String categoria);
+    List<Recurso> recomendarRecursosByCategoriaAndTipo(String categoria, String tipo);
 
     /*Devolver un recurso que se encontraba prestado,
     obviamente si un recurso no se encuentra en préstamo no podrá ser devuelto.
     Indicar el resultado con un mensaje.*/
-    //String devolverRecursoById(String id);
+    String devolverRecursoById(String id);
 }
